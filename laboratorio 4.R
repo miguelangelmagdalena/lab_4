@@ -18,15 +18,15 @@ data.testing    <- data.other[-idx2,]
 #---------------------------------------------
 
 attach(data.training)
-#1. Entrenamos el m骴elo
+#1. Entrenamos el m贸delo
 glm.fit <- glm(Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, data = data.training,family = binomial)
 glm.fit2 <- glm(Direction ~ Lag1 + Lag2, data = data.training,family = binomial)
 
-#2. Probamos el m骴elo, tratando de predecir con datos nuevos
+#2. Probamos el m贸delo, tratando de predecir con datos nuevos
 glm.probs <- predict(glm.fit , data = data.validation,type = "response")
 glm.probs2 <- predict(glm.fit2 , data = data.validation,type = "response")
 
-#3. Creamos la matriz de confusi髇 para evaluar la predicci髇 del m骴elo
+#3. Creamos la matriz de confusi贸n para evaluar la predicci贸n del m贸delo
 glm.pred <- rep("Down", nrow(data.training))
 glm.pred[glm.probs > 0.5] = "Up"
 glm.matriz_confusion <- table(glm.pred, Direction)
@@ -35,7 +35,7 @@ glm.pred2 <- rep("Down", nrow(data.training))
 glm.pred2[glm.probs2 > 0.5] = "Up"
 glm.matriz_confusion2 <- table(glm.pred2, Direction)
 
-#4. Analizamos los resultados de la matriz de confusi髇
+#4. Analizamos los resultados de la matriz de confusi贸n
 
 
 #4.1. Exactitud (Prevalence) para el modelo en general:
@@ -43,12 +43,12 @@ glm.matriz_confusion2 <- table(glm.pred2, Direction)
 glm.exactitud <- (glm.matriz_confusion[1,1] + glm.matriz_confusion[2,2]) / sum(glm.matriz_confusion[])
 
 #4.2. Sensitivity
-#Medida de la completitud, que indica cu醤tos valores de la clase positiva fueron clasificados correctamente
+#Medida de la completitud, que indica cu谩ntos valores de la clase positiva fueron clasificados correctamente
 glm.sensitivity <- glm.matriz_confusion[1,1]/ sum(glm.matriz_confusion[1,])
 
 
 #4.3. Specificity
-#indica cu醤tos valores de la clase negativa fueron clasificados correctamente
+#indica cu谩ntos valores de la clase negativa fueron clasificados correctamente
 glm.specificity <- glm.matriz_confusion[2,2]/ sum(glm.matriz_confusion[2,])
 
 
@@ -62,28 +62,28 @@ glm.matriz_confusion2
 #LDA Latent Dirichlent Allocation (LDA)
 #---------------------------------------------
 
-#1. Entrenamos el m骴elo
+#1. Entrenamos el m贸delo
 lda.fit <- lda(Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, data = data.training)
 
-#2. Probamos el m骴elo, tratando de predecir con datos nuevos
+#2. Probamos el m贸delo, tratando de predecir con datos nuevos
 lda.probs <- predict(lda.fit , data = data.validation)
 
-#3. Creamos la matriz de confusi髇 para evaluar la predicci髇 del m骴elo
+#3. Creamos la matriz de confusi贸n para evaluar la predicci贸n del m贸delo
 lda.matriz_confusion <- table(lda.probs$class, Direction)
 
-#4. Analizamos los resultados de la matriz de confusi髇
+#4. Analizamos los resultados de la matriz de confusi贸n
 
 #4.1. Exactitud (Prevalence) para el modelo en general:
 #Sin embargo, si las clases son muy diferentes, esta medida no significa nada
 lda.exactitud <- (lda.matriz_confusion[1,1] + lda.matriz_confusion[2,2]) / sum(lda.matriz_confusion[])
 
 #4.2. Sensitivity
-#Medida de la completitud, que indica cu醤tos valores de la clase positiva fueron clasificados correctamente
+#Medida de la completitud, que indica cu谩ntos valores de la clase positiva fueron clasificados correctamente
 lda.sensitivity <- lda.matriz_confusion[1,1]/ sum(lda.matriz_confusion[1,])
 
 
 #4.3. Specificity
-#indica cu醤tos valores de la clase negativa fueron clasificados correctamente
+#indica cu谩ntos valores de la clase negativa fueron clasificados correctamente
 lda.specificity <- lda.matriz_confusion[2,2]/ sum(lda.matriz_confusion[2,])
 
 
@@ -113,22 +113,22 @@ data.testing2  <- data.testing2 [c(2,3,4,5,6)]
 set.seed(1)
 knn.pred = knn(data.training2, data.testing2, cl, k = 1, prob =TRUE)
 
-#3. Creamos la matriz de confusi髇
+#3. Creamos la matriz de confusi贸n
 knn.matriz_confusion <- table(knn.pred, cl)
 
-#4. Analizamos los resultados de la matriz de confusi髇
+#4. Analizamos los resultados de la matriz de confusi贸n
 
 #4.1. Exactitud (Prevalence) para el modelo en general:
 #Sin embargo, si las clases son muy diferentes, esta medida no significa nada
 knn.exactitud <- (knn.matriz_confusion[1,1] + knn.matriz_confusion[2,2]) / sum(knn.matriz_confusion[])
 
 #4.2. Sensitivity
-#Medida de la completitud, que indica cu醤tos valores de la clase positiva fueron clasificados correctamente
+#Medida de la completitud, que indica cu谩ntos valores de la clase positiva fueron clasificados correctamente
 knn.sensitivity <- knn.matriz_confusion[1,1]/ sum(knn.matriz_confusion[1,])
 
 
 #4.3. Specificity
-#indica cu醤tos valores de la clase negativa fueron clasificados correctamente
+#indica cu谩ntos valores de la clase negativa fueron clasificados correctamente
 knn.specificity <- knn.matriz_confusion[2,2]/ sum(knn.matriz_confusion[2,])
 
 
@@ -140,7 +140,7 @@ knn.specificity
 
 
 
-#Comparamos los m閠odos
+#Comparamos los m茅todos
 
 #--GLM--
 glm.matriz_confusion
@@ -159,4 +159,27 @@ knn.matriz_confusion
 knn.exactitud
 knn.sensitivity
 knn.specificity
+
+#Con la exactitud, podemos observar la proporci贸n del numero
+#total de predicciones que fueron correctas, y en este caso
+#podemos notar que en glm y lda tenemos la misma exactitud
+#pero en knn es un poco menor, sin embargo si la separaci贸n
+#de las clases es muy grande, Es decir tenemos 1000 observaciones
+#correspondientes a up y 100 a down, no tenemos las clases balanceadas
+#y con la exactitud solo se tomar铆a en cuenta las predicciones correctas
+#del caso UP
+
+#Por otro lado la sensitivity es la proporcion de casos negativos
+#que fueron clasificados correctamente, y en este dataset seria
+#los casos correctamente clasificados de la clase Down, y lda supera
+#a glm por algunas d茅cimas y knn se queda por debajo
+
+#Luego tenemos la specificity que que es la proporcion de casos
+#positivos que fueron clasificados correctamente, serian la clase
+#UP y podemos notar que entre glm y lda es mejor glm
+#pero knn clasifica a los UP un poco mejor
+
+#En fin, podemos concluir que para este dataset lda y glm se
+#adaptan mucho mejor que knn
+
 
